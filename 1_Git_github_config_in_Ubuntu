@@ -1,0 +1,49 @@
+#Install Git
+sudo apt-get install git
+
+#Git version
+git --version
+
+
+#Configure git
+git config --global user.name 'userName'
+git config --global user.email 'email'
+git config --list
+
+
+# To see the git config file details
+gedit .gitconfig
+
+
+#clone git repo
+git clone 'URL for Repo'
+
+
+#create new source files 
+touch HelloWorld.java
+
+#edit the source file
+gedit HelloWorld.java
+
+
+# commit procedure
+
+## check status
+git status
+
+
+##add files to git
+git add HelloWorld.java
+
+
+## you can check status again using 
+git status
+
+## commit code
+git commit -m 'commit message' HelloWorld.java
+
+
+## push code to server
+git push -u origin master
+## you may need to enter username and password for this step
+
