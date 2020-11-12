@@ -1,0 +1,148 @@
+# This command will download the image if it not exist in local computer and runs it or simply starts a container
+    'docker run docker/whalesay cowsay boo'
+    'docker run nginx'
+
+# List all running containers  
+    'sudo docker ps'
+
+# List all running/stops and existed containers  
+    'sudo docker ps -a'
+
+# Stop a container
+    'sudo docker stop <container ID or container name>
+
+# Remove a container permanently
+    'sudo docker rm <container ID or container name>'
+
+# List all images
+    'sudo docker images'
+
+# Remove images (to remove a image, you should first stop all dependent containers of that images)
+    'sudo docker rmi nginx'
+
+# Download an image
+    'sudo docker pull nginx'
+
+# Append command
+    'sudo docker run ubuntu sleep 5'
+
+# Execute a command in a running container
+    'sudo docker exec distracted_mcclintock cat /etc/hosts'
+
+# Run a container in attach mode
+    'sudo docker run <image name>'
+
+# Run a container in detach mode
+    'sudo docker run -d <image name>'
+
+# attach a container in detach mode
+    'sudo docker attach <container ID or name>
+
+# Run a container with a name
+    sudo docker run --name webapp nginx:1.14-alpine
+
+# Tag
+    sudo docker run redis:latest
+    sudo docker run redis:4.0
+
+# STDIN
+    sudo docker run -it kodekloud/simple-prompt-docker
+
+# PORT mspping
+    sudo docker run -p 80:5000 kodekloud/simple-webapp
+    sudo docker run -p 8000:5000 kodekloud/simple-webapp
+    sudo docker run -p 8001:5000 kodekloud/simple-webapp
+
+# Volume mapping
+    sudo docker run mysql #Normal way
+    sudo docker run -v /opt/datadir:/var/lib/mysql mysql # with volume mapping
+
+# Inspect container
+    sudo docker inspect <container ID or name>
+
+# container Logs
+    sudo docker logs <container ID or Name>
+
+# ENV variable
+    sudo docker -e APP_COLOR=blue <container ID or name>
+    sudo docker -e APP_COLOR=green <container ID or name>
+    sudo docker -e APP_COLOR=pink <container ID or name>
+
+# Inspect Environment variable
+    sudo docker inspect <container ID or name>
+
+# How to create my own image
+    Create a Dockerfile
+    then Build it -> sudo docker Dockerfile -t mmumshad/my-custom-App
+    Download the iamges after register docker image -> sudo docker push mmumshad/my-custom-App
+
+# Entry point
+  Dockerfile:
+    FROM Ubuntu
+    ENTRYPOINT ["sleep"]
+    CMD["5"]
+
+  - command at startup : sleep 5
+    sudo docker run ubuntu-sleeper
+
+  - command at startup : sleep 10
+    sudo docker run ubuntu-sleeper 10
+
+  - command at startup : sleep2.0 10
+    sudo docker run --entrypoint sleep2.0 ubuntu-sleeper 10
+
+# Default networks
+    There are 3 main networks
+        Bridge -> sudo docker run Ubuntu
+        none -> sudo docker run Ubuntu --network=none
+        host -> sudo docker run Ubuntu --networks=host
+
+# User defined networks
+    sudo docker network create \
+    --driver bridge \
+    --subnet 182.18.0.00/16
+    custom-isolated-network
+
+# List all network
+    docker network ls
+
+# Inspect network
+    sudo docker inspect <container ID>    # check the network section
+
+# Embedded DNS
+    mysql.connect( mysql)
+
+# Volumes mount - without file path
+    docker volume create data_volume  # This will create a folder called data_volume under the /var/lib/docker/volumes
+    docker run -v data_volume:/var/lib/mysql mysql # This will mount the mysql database into newly created volume called data_volume
+    docker run -v data_volume2:/var/lib/mysql mysql # If we try to mount to a volume which is not exist at this moment, this command create a new volume called data_volume2 and mount mysql database into data_volume2
+
+# Bind mount - with file path
+    docker run -v /data/mysql:/var/lib/mysql mysql  # This will mount a copy of mysql db into /data/mysql
+
+# Both above volume mount and bind amount can be done using following command. This command is more convenient because it have source and target option
+    docker run \
+    --mount type=bind,source=/data/mysql,target=/var/lib/mysql mysql
+
+# Docker compose 
+    docker-compose up
+
+# Private Registry
+    docker login private-registry.io # login to private registry
+    docker run private-registry.io/apps/internal-app # After successful login, then you can run a instance of private registry
+
+# Deploy private registry
+    docker run -d -p 5000:5000 --name registry registry:2  # check the custom images(registry) is working
+    docker image tag my-image localhost:5000/my-image # use image tag command to tag the private registry to URL 
+
+    docker push localhost:5000/my-image # push new image into local network
+
+    docker pull localhost:5000/my-image # pull the image within in private network
+    docker pull 192.168.52.100/my-image # pull the image outside of the private network
+
+# cgroups
+    docker run --cpus=0.5 ubuntu # limit to CPU usage maximum up to 50%
+    docker run --memory=100m ubuntu # limit the memory usage up to 100MB
+
+# container orchestration
+    docker service create --replicas=100 nodejs # run 100 instance of containers of nodejs image
